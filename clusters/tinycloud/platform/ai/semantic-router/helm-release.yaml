@@ -1,0 +1,71 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: semantic-router
+  namespace: semantic-router
+spec:
+  interval: 30m
+  timeout: 15m
+  chartRef:
+    kind: OCIRepository
+    name: semantic-router
+    namespace: flux-system
+  dependsOn:
+    - name: vllm
+      namespace: vllm
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    persistence:
+      storageClassName: local-path
+    securityContext:
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+    image:
+      tag: v0.3.0
+      pullPolicy: IfNotPresent
+    config:
+      providers:
+        defaults:
+          default_model: qwen3-4b
+        models:
+          - name: qwen3-4b
+            provider_model_id: qwen3-4b
+            api_format: openai
+            backend_refs:
+              - name: primary
+                endpoint: vllm-qwen-instruct-engine-service.vllm.svc.cluster.local:80
+                protocol: http
+                provider: vllm
+                weight: 100
+      routing:
+        modelCards:
+          - name: qwen3-4b
+            description: Local Qwen3 4B model served by vLLM.
+            capabilities:
+              - chat
+              - text
+            modality: text
+        decisions:
+          - name: qwen3-4b-default
+            description: Route automatic requests to the local Qwen3 4B backend.
+            priority: 1
+            rules:
+              operator: AND
+              conditions: []
+            modelRefs:
+              - model: qwen3-4b
+                use_reasoning: false
+      global:
+        router:
+          auto_model_names:
+            - auto
+        services:
+          response_api:
+            enabled: false
+            store_backend: memory

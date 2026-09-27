@@ -1,5 +1,4 @@
-ansible-core==2.21.4
-ansible-lint==26.9.0
+ansible-dev-tools==26.9.0
 kubernetes==36.0.3
 requests-oauthlib==2.0.0
 jsonpatch==1.33

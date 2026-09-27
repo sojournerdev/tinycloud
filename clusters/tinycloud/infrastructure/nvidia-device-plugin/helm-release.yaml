@@ -1,17 +1,3 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: nvidia-device-plugin
-  namespace: flux-system
-spec:
-  interval: 24h
-  url: https://nvidia.github.io/k8s-device-plugin
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: nvidia-device-plugin
----
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:

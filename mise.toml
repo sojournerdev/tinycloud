@@ -13,10 +13,14 @@ yamllint = "1.36.1"
 
 [env]
 _.file = ".env"
-_.python.venv = { path = ".venv", create = true }
+_.python.venv = { path = "machines/.venv", create = true }
 SOPS_CONFIG = "{{config_root}}/.sops.yaml"
 
 # ── Ansible ───────────────────────────────────────────────────────
+[tasks.setup]
+description = "Prepare the Ansible controller environment"
+depends = ["collections"]
+
 [tasks.python-deps]
 description = "Install locked Ansible controller dependencies"
 dir = "machines"
@@ -28,11 +32,37 @@ depends = ["python-deps"]
 dir = "machines"
 run = "ansible-galaxy collection install -r requirements.yml"
 
+[tasks.ansible-doctor]
+description = "Check Ansible controller prerequisites"
+depends = ["collections"]
+dir = "machines"
+run = [
+  "ansible --version",
+  "ansible-galaxy collection list",
+  "ansible-inventory -i inventory/workstation.yml --list >/dev/null",
+  "ansible-inventory -i inventory/server.yml --list >/dev/null",
+]
+
 [tasks.workstation-deploy]
 description = "Configure workstation"
 depends = ["collections"]
 dir = "machines"
 run = "ansible-playbook playbooks/workstation.yml -i inventory/workstation.yml"
+
+[tasks.workstation-check]
+description = "Preview workstation changes with Ansible check mode"
+depends = ["collections"]
+dir = "machines"
+run = "ansible-playbook playbooks/workstation.yml -i inventory/workstation.yml --check --diff"
+
+[tasks.ansible-verify]
+description = "Run read-only Ansible verification and host preview"
+depends = ["collections"]
+dir = "machines"
+run = [
+  "ansible-playbook playbooks/workstation.yml -i inventory/workstation.yml --tags workstation_verify",
+  "ansible-playbook playbooks/server.yml -i inventory/server.yml -c ssh --check --diff",
+]
 
 [tasks.host-deploy]
 description = "Apply host configuration"
@@ -57,7 +87,7 @@ run = [
   "ansible-lint roles/",
   "ansible-playbook playbooks/workstation.yml -i inventory/workstation.yml --syntax-check",
   "ansible-playbook playbooks/server.yml -i inventory/server.yml --syntax-check",
-  "yamllint roles/ inventory/ playbooks/ ../clusters/tinycloud/infrastructure/ ../clusters/tinycloud/apps/",
+  "yamllint roles/ inventory/ playbooks/ ../clusters/tinycloud/infrastructure/ ../clusters/tinycloud/platform/",
 ]
 
 # ── Check ─────────────────────────────────────────────────────────
@@ -65,13 +95,15 @@ run = [
 description = "Run all checks"
 depends = ["lint", "cluster-test"]
 
-# ── Cluster ─────────────────────────────────────────────────────────
+# ── Cluster ───────────────────────────────────────────────────────
+[tasks.cluster-setup]
+description = "Install the pinned Flux schema plugin"
+run = "flux plugin install schema@0.5.0"
+
 [tasks.cluster-test]
 description = "Catch invalid Flux resources before deployment"
-run = [
-  "flux plugin install schema@0.5.0",
-  "scripts/cluster-test-config.sh",
-]
+depends = ["cluster-setup"]
+run = "scripts/cluster-test-config.sh"
 
 # ── TLS ──────────────────────────────────────────────────────────
 [tasks.tls-generate]

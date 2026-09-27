@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-command -v mise >/dev/null 2>&1 || brew install mise
+if ! command -v mise >/dev/null 2>&1; then
+  brew install mise
+fi
 
-mise install
-mise run workstation-init
+mise --version

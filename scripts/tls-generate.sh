@@ -4,7 +4,7 @@ umask 077
 
 # Rotate the leaf certificate; keep the mkcert root CA stable.
 
-SECRET="clusters/tinycloud/infrastructure/secrets.yaml"
+SECRET="clusters/tinycloud/platform/gateway/gateway-tls.sops.yaml"
 CERT_DIR="$(mktemp -d "${TMPDIR:-/tmp}/gateway-tls.XXXXXX")"
 CERT="$CERT_DIR/wildcard.home.arpa.pem"
 KEY="$CERT_DIR/wildcard.home.arpa-key.pem"
