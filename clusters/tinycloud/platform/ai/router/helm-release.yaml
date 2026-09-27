@@ -23,9 +23,7 @@ spec:
     persistence:
       storageClassName: local-path
     securityContext:
-      runAsNonRoot: true
       allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
     image:
       tag: v0.3.0
       pullPolicy: IfNotPresent
