@@ -61,8 +61,11 @@ spec:
                 use_reasoning: false
       global:
         router:
-          auto_model_names:
-            - auto
+          auto_model_name: auto
+        model_catalog:
+          embeddings:
+            semantic:
+              use_cpu: true
         services:
           response_api:
             enabled: false
