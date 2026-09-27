@@ -28,6 +28,11 @@ spec:
       tag: v0.3.0
       pullPolicy: IfNotPresent
     config:
+      listeners:
+        - name: http-8080
+          address: 0.0.0.0
+          port: 8080
+          timeout: 300s
       providers:
         defaults:
           default_model: qwen3-4b
