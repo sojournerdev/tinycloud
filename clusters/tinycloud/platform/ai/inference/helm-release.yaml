@@ -24,15 +24,15 @@ spec:
     remediation:
       retries: 3
   values:
+    routerSpec:
+      enableRouter: false
     servingEngineSpec:
       serviceMonitor:
         enabled: true
         additionalLabels:
           platform.tinycloud.dev/monitoring: prometheus
-        interval: 30s
       modelSpec:
         - name: qwen-instruct
-          runtimeClassName: nvidia
           repository: vllm/vllm-openai
           tag: v0.29.0
           modelURL: Qwen/Qwen3-4B-AWQ
@@ -44,8 +44,6 @@ spec:
           limitMemory: 8Gi
           storageClass: local-path
           pvcStorage: 10Gi
-          pvcAccessMode:
-            - ReadWriteOnce
           vllmConfig:
             tensorParallelSize: 1
             maxModelLen: 4096
@@ -55,5 +53,3 @@ spec:
             extraArgs:
               - --served-model-name
               - qwen3-4b
-      routerSpec:
-        enableRouter: false

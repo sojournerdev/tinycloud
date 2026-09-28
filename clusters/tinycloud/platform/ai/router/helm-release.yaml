@@ -42,7 +42,7 @@ spec:
             api_format: openai
             backend_refs:
               - name: primary
-                endpoint: vllm-qwen-instruct-engine-service.vllm.svc.cluster.local:80
+                base_url: http://vllm-qwen-instruct-engine-service.vllm.svc.cluster.local:80/v1
                 protocol: http
                 provider: vllm
                 weight: 100
