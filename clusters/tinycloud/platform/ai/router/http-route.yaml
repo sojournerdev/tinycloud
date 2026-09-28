@@ -17,8 +17,11 @@ spec:
         - path:
             type: PathPrefix
             value: /
+      timeouts:
+        request: 300s
       backendRefs:
         - group: ""
           kind: Service
-          name: semantic-router
-          port: 8080
+          name: vllm-qwen-instruct-engine-service
+          namespace: vllm
+          port: 80
