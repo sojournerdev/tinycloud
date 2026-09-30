@@ -1,22 +1,17 @@
 ---
 extends: default
-
-ignore:
-  - "*/flux-system/*"
-  - "**/secrets.yaml"
-
+ignore: |
+  **/flux-system/**
 rules:
-  # Ansible allows yes/no; Kubernetes prefers true/false
+  # Ansible allows yes/no; Kubernetes and GitHub Actions prefer true/false.
   truthy:
     allowed-values: ['true', 'false', 'yes', 'no']
 
-  # Both ecosystems use 120
   line-length:
     max: 120
     allow-non-breakable-words: true
     allow-non-breakable-inline-mappings: true
 
-  # Ansible files don't always need ---
   document-start: disable
 
   indentation:
@@ -25,7 +20,8 @@ rules:
 
   comments:
     require-starting-space: true
-  comments-indentation: enable
+    min-spaces-from-content: 1
+  comments-indentation: disable
 
   trailing-spaces: enable
 
@@ -33,3 +29,10 @@ rules:
     max: 2
     max-start: 0
     max-end: 0
+
+  braces:
+    max-spaces-inside: 1
+
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
