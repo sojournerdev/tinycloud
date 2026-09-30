@@ -1,11 +1,6 @@
 ---
 workstation_brew_packages:
   - mise
-  - pipx
-
-workstation_pipx_packages:
-  - ansible-core
-  - ansible-lint
 
 # SSH keypair for homelab server access.
 # Role asserts it exists — never generates or overwrites.

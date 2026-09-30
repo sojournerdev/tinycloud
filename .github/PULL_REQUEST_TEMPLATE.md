@@ -8,4 +8,4 @@
 
 ## Checklist
 
-- [ ] `mise run check` passes
+- [ ] `mise run ci` passes
