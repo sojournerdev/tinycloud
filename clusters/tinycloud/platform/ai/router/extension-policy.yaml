@@ -15,7 +15,7 @@ spec:
           name: semantic-router
           port: 50051
       failOpen: false
-      messageTimeout: 10s
+      messageTimeout: 60s
       processingMode:
         allowModeOverride: true
         request:
