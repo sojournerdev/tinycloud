@@ -46,7 +46,7 @@ spec:
           pvcStorage: 10Gi
           vllmConfig:
             tensorParallelSize: 1
-            maxModelLen: 4096
+            maxModelLen: 8192
             dtype: float16
             quantization: awq
             gpuMemoryUtilization: 0.8
