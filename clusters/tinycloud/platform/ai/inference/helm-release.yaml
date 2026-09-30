@@ -53,3 +53,6 @@ spec:
             extraArgs:
               - --served-model-name
               - qwen3-4b
+              - --enable-auto-tool-choice
+              - --tool-call-parser
+              - hermes
