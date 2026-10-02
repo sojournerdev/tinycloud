@@ -4,4 +4,8 @@ resources:
   - namespace.yaml
   - helm-repository.yaml
   - helm-release.yaml
-  - reference-grant.yaml
+  - http-route.yaml
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: inference
+    includeSelectors: false

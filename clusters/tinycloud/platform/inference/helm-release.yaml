@@ -27,32 +27,34 @@ spec:
     routerSpec:
       enableRouter: false
     servingEngineSpec:
+      strategy:
+        type: Recreate
       serviceMonitor:
         enabled: true
         additionalLabels:
           platform.tinycloud.dev/monitoring: prometheus
       modelSpec:
-        - name: qwen-instruct
+        - name: qwen3-8b
           repository: vllm/vllm-openai
           tag: v0.29.0
-          modelURL: Qwen/Qwen3-4B-AWQ
+          modelURL: Qwen/Qwen3-8B-AWQ
           requestCPU: 2
-          requestMemory: 4Gi
+          requestMemory: 6Gi
           requestGPU: 1
           requestGPUType: nvidia.com/gpu
           limitCPU: "4"
-          limitMemory: 8Gi
+          limitMemory: 10Gi
           storageClass: local-path
           pvcStorage: 10Gi
           vllmConfig:
             tensorParallelSize: 1
             maxModelLen: 8192
-            dtype: float16
+            dtype: bfloat16
             quantization: awq
-            gpuMemoryUtilization: 0.8
+            gpuMemoryUtilization: 0.9
             extraArgs:
               - --served-model-name
-              - qwen3-4b
+              - qwen3-8b
               - --enable-auto-tool-choice
               - --tool-call-parser
               - hermes
